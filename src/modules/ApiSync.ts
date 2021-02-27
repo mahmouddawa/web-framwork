@@ -18,4 +18,5 @@ export class ApiSync<T extends HasId>{
       return axios.post(this.rootUrl, data);
     }
   }
+  
 }
