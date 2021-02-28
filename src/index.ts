@@ -1,12 +1,9 @@
 import {User} from './modules/User';
 
-const user = User.buildUser({id:1, name:'boby', age:50});
+const collection = User.buildCollection();
 
-
-user.on('save',()=>{
-  console.log(user);
+collection.on('change', ()=>{
+  console.log(collection);
 })
-
-
-user.save();
+collection.fetch();
 

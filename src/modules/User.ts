@@ -3,6 +3,7 @@ import { Attributes } from './Attributes';
 import {Model} from './Model';
 import {Eventing} from './Eventing';
 import { ApiSync } from './ApiSync';
+import { Collection } from './Collection';
 
 export interface UserProps{
   id?:number;
@@ -19,6 +20,11 @@ export class User extends Model<UserProps>{
       new Eventing(),
       new ApiSync<UserProps>(rootUrl)
     )
+  }
+  static buildCollection():Collection<User, UserProps> {
+   return new Collection<User,UserProps>(
+      rootUrl,
+      (json:UserProps)=>User.buildUser(json) );
   }
    
 }
