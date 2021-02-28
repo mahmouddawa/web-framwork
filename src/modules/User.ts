@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { Attributes } from './Attributes';
 import {Model} from './Model';
 import {Eventing} from './Eventing';
@@ -25,6 +24,5 @@ export class User extends Model<UserProps>{
    return new Collection<User,UserProps>(
       rootUrl,
       (json:UserProps)=>User.buildUser(json) );
-  }
-   
+  }  
 }
