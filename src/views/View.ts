@@ -4,15 +4,24 @@ export abstract class View<T extends Model<K>,K >{
   constructor(public parent:Element, public model: T){
     this.bindModel();
   };
-  abstract eventsMap():{ [key:string]:()=> void};
+  
   abstract template():string;
+  regions: {[key:string]:Element} = {};
+
+  regionsMap():{[key:string]:string}{
+    return {};
+  }
+
+  eventsMap():{ [key:string]:()=> void}{
+    return {};
+  }
   bindModel():void{
     this.model.on('change', ()=>{
       this.render();
     })
   }
 
-  bindEvent(fragment:DocumentFragment){
+  bindEvent(fragment:DocumentFragment):void{
     const eventsMap = this.eventsMap();
     for(let eventKey in eventsMap){
       const [eventName, selector] = eventKey.split(':');
@@ -20,6 +29,19 @@ export abstract class View<T extends Model<K>,K >{
         element.addEventListener(eventName, eventsMap[eventKey])
       })
     }
+  }
+  mapRegions(fragment:DocumentFragment):void{
+    const regionMap= this.regionsMap();
+    for(let key in regionMap){
+      const selector = regionMap[key];
+      const element = fragment.querySelector(selector);
+      if(element){
+      this.regions[key] = element;
+      }
+    }
+  }
+  onRender():void{
+    // for view nesting, should be declared in child class
   }
   render():void{
     // rethink of some other way to compare the dom like react or
@@ -30,6 +52,9 @@ export abstract class View<T extends Model<K>,K >{
     templateElement.innerHTML = this.template();
 
     this.bindEvent(templateElement.content);
+    this.mapRegions(templateElement.content);
+    this.onRender();
+
     this.parent.append(templateElement.content);
   }
 }
